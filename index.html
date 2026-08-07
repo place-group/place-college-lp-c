@@ -999,7 +999,6 @@ input, textarea { font-family: inherit; }
     <section id="contact" data-screen-label="Contact" style="background: #f3981c; padding: 40px 20px 44px;">
       <div style="display: flex; align-items: center; justify-content: center; padding: 18px 20px; background: #ffffff; border-radius: 999px; box-shadow: 0 7px 0 #fde839; text-align: center; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.6;">見学・体験のお申し込み<br>お問い合わせはこちら</div>
 
-      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
       <form sc-camel-on-submit="{{ onSubmit }}" style="display: flex; flex-direction: column; gap: 18px; margin-top: 34px;">
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           お名前*
@@ -1032,13 +1031,6 @@ input, textarea { font-family: inherit; }
           <span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #232021; color: #ffffff; font-size: 11px;">▶</span>
         </button>
       </form>
-      </sc-if>
-      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
-        <div style="background: #ffffff; border-radius: 16px; margin-top: 34px; padding: 38px 24px; text-align: center;">
-          <p style="margin: 0; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 17px; color: #f3981c;">お申し込みありがとうございます。</p>
-          <p style="margin: 12px 0 0; font-size: 13.5px; line-height: 2; color: #232021;">担当者より折り返しご連絡いたします。<br>ご相談だけでも歓迎です。</p>
-        </div>
-      </sc-if>
     </section>
 
     <footer style="display: flex; align-items: center; justify-content: space-between; padding: 30px 20px 40px; background: #ffffff;">
@@ -1098,7 +1090,7 @@ class Component extends DCLogic {
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.success === false) throw new Error(data.message || 'HTTP ' + res.status);
       try { sessionStorage.removeItem('__pc_form'); } catch (e) {}
-      this.setState({ sent: true, sending: false });
+      location.href = 'thanks.html';
     } catch (e) {
       this.setState({
         sending: false,
@@ -1116,7 +1108,7 @@ class Component extends DCLogic {
   renderVals() {
     const v = {
       onSubmit: e => { e.preventDefault(); this.doSubmit(); },
-      sent: this.state.sent, notSent: !this.state.sent, error: this.state.error,
+      error: this.state.error,
       showSideNav: this.props.showSideNav ?? true,
       showFloatingCta: this.props.showFloatingCta ?? true
     };
