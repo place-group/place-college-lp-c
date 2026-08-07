@@ -986,36 +986,46 @@ input, textarea { font-family: inherit; }
     <section id="contact" data-screen-label="Contact" style="background: #f3981c; padding: 40px 20px 44px;">
       <div style="display: flex; align-items: center; justify-content: center; padding: 18px 20px; background: #ffffff; border-radius: 999px; box-shadow: 0 7px 0 #fde839; text-align: center; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.6;">見学・体験のお申し込み<br>お問い合わせはこちら</div>
 
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
       <form sc-camel-on-submit="{{ onSubmit }}" style="display: flex; flex-direction: column; gap: 18px; margin-top: 34px;">
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           お名前*
-          <input type="text" placeholder="山田花子" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
+          <input type="text" name="name" placeholder="山田花子" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
         </label>
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           電話番号*
-          <input type="tel" placeholder="123-456-7890" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
+          <input type="tel" name="phone" placeholder="123-456-7890" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
         </label>
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           メールアドレス*
-          <input type="email" placeholder="example@mail.com" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
+          <input type="email" name="email" placeholder="example@mail.com" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
         </label>
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           お子さまの学年*
-          <input type="text" placeholder="高校2年生" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
+          <input type="text" name="grade" placeholder="高校2年生" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021;">
         </label>
         <label style="display: flex; flex-direction: column; gap: 8px; color: #ffffff; font-weight: 700; font-size: 14px;">
           お問い合わせ内容
-          <textarea rows="5" placeholder="問い合わせ内容を入力してください" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021; resize: vertical;"></textarea>
+          <textarea rows="5" name="message" placeholder="問い合わせ内容を入力してください" style="padding: 13px 14px; border: none; background: #ffffff; font-size: 14px; color: #232021; resize: vertical;"></textarea>
         </label>
+        <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 2px; color: #ffffff; font-weight: 700; font-size: 14px; line-height: 1.7; cursor: pointer;">
+          <input type="checkbox" name="privacy" style="width: 17px; height: 17px; margin-top: 3px; accent-color: #232021; flex: none;">
+          <span><a href="privacy.html" style="color: #ffffff; text-decoration: underline;">プライバシーポリシー</a>に同意する *</span>
+        </label>
+        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display: none;">
+        <sc-if value="{{ error }}"><p style="margin: 0; padding: 12px 16px; background: #ffffff; border-radius: 10px; font-weight: 700; font-size: 13px; line-height: 1.7; color: #d0342c;">{{ error }}</p></sc-if>
         <button type="submit" style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 8px; padding: 18px 0; background: #ffffff; border: 2.5px solid #232021; border-radius: 999px; box-shadow: 0 7px 0 #fde839; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 18px; color: #232021; letter-spacing: .04em; cursor: pointer;">
           送信する
           <span style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #232021; color: #ffffff; font-size: 11px;">▶</span>
         </button>
-        <label style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer;">
-          <input type="checkbox" style="width: 17px; height: 17px; accent-color: #232021;">
-          プライバシーポリシーに同意する
-        </label>
       </form>
+      </sc-if>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #ffffff; border-radius: 16px; margin-top: 34px; padding: 38px 24px; text-align: center;">
+          <p style="margin: 0; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 17px; color: #f3981c;">お申し込みありがとうございます。</p>
+          <p style="margin: 12px 0 0; font-size: 13.5px; line-height: 2; color: #232021;">担当者より折り返しご連絡いたします。<br>ご相談だけでも歓迎です。</p>
+        </div>
+      </sc-if>
     </section>
 
     <footer style="display: flex; align-items: center; justify-content: space-between; padding: 30px 20px 40px; background: #ffffff;">
@@ -1034,7 +1044,54 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     const first = props.openFirstFaq ?? true;
-    this.state = { open: [first, false, false, false, false] };
+    this.state = { open: [first, false, false, false, false], sent: false, sending: false, error: '' };
+  }
+  async doSubmit() {
+    if (this.state.sending) return;
+    const root = document.getElementById('dc-root') || document;
+    const val = (n) => { const el = root.querySelector('[name="' + n + '"]'); return el ? String(el.value || '').trim() : ''; };
+    const name = val('name'), phone = val('phone'), email = val('email'), grade = val('grade'), message = val('message');
+    if (!name || !phone || !email || !grade) {
+      this.setState({ error: '必須項目（お名前・電話番号・メールアドレス・お子さまの学年）をご入力ください。' });
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      this.setState({ error: 'メールアドレスの形式をご確認ください。' });
+      return;
+    }
+    const priv = root.querySelector('[name="privacy"]');
+    if (!priv || !priv.checked) {
+      this.setState({ error: 'プライバシーポリシーをご確認のうえ、同意にチェックを入れてください。' });
+      return;
+    }
+    const bot = root.querySelector('[name="botcheck"]');
+    this.setState({ sending: true, error: '' });
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: 'fc2f113b-5730-4d06-b4ba-9750124dff69',
+          subject: '【ぷれいすカレッジLP-C】見学・体験のお申し込み',
+          from_name: 'ぷれいすカレッジLP-C',
+          botcheck: !!(bot && bot.checked),
+          'お名前': name,
+          '電話番号': phone,
+          'メールアドレス': email,
+          'お子さまの学年': grade,
+          'お問い合わせ内容': message || '（未入力）'
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.success === false) throw new Error(data.message || 'HTTP ' + res.status);
+      try { sessionStorage.removeItem('__pc_form'); } catch (e) {}
+      this.setState({ sent: true, sending: false });
+    } catch (e) {
+      this.setState({
+        sending: false,
+        error: '送信に失敗しました。お手数ですが、時間をおいて再度お試しいただくか、お電話（072-707-2603）にてご連絡ください。'
+      });
+    }
   }
   toggle(i) {
     this.setState(s => {
@@ -1045,7 +1102,8 @@ class Component extends DCLogic {
   }
   renderVals() {
     const v = {
-      onSubmit: e => e.preventDefault(),
+      onSubmit: e => { e.preventDefault(); this.doSubmit(); },
+      sent: this.state.sent, notSent: !this.state.sent, error: this.state.error,
       showSideNav: this.props.showSideNav ?? true,
       showFloatingCta: this.props.showFloatingCta ?? true
     };
@@ -1060,4 +1118,62 @@ class Component extends DCLogic {
 </script>
 
 
+
+<script>
+// Contact-form draft persistence: values survive navigating to privacy.html
+// and back (sessionStorage, cleared on successful submit / tab close).
+(function () {
+  var KEY = '__pc_form';
+  var FIELDS = ['name', 'phone', 'email', 'grade', 'message', 'privacy'];
+  function field(n) { return document.querySelector('#dc-root [name="' + n + '"]'); }
+  function save() {
+    try {
+      var d = {};
+      FIELDS.forEach(function (n) {
+        var el = field(n); if (!el) return;
+        d[n] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+      sessionStorage.setItem(KEY, JSON.stringify(d));
+    } catch (e) {}
+  }
+  function onEdit(e) {
+    if (e.target && FIELDS.indexOf(e.target.name) >= 0) save();
+  }
+  document.addEventListener('input', onEdit, true);
+  document.addEventListener('change', onEdit, true);
+  var tries = 0;
+  var timer = setInterval(function () {
+    if (++tries > 150) { clearInterval(timer); return; }
+    if (!field('name')) return;
+    clearInterval(timer);
+    try {
+      var d = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      if (d) {
+        FIELDS.forEach(function (n) {
+          var el = field(n); if (!el || d[n] == null) return;
+          if (el.type === 'checkbox') el.checked = !!d[n];
+          else el.value = d[n];
+        });
+      }
+    } catch (e) {}
+    if (location.hash === '#contact') {
+      // Layout keeps growing for a moment as images/fonts settle, which
+      // drifts an early jump upward — re-align until stable, unless the
+      // user has started scrolling on their own.
+      var jump = function () {
+        var c = document.getElementById('contact');
+        if (c) c.scrollIntoView();
+      };
+      var cancelled = false;
+      ['wheel', 'touchstart', 'keydown'].forEach(function (t) {
+        window.addEventListener(t, function () { cancelled = true; }, { once: true, passive: true });
+      });
+      jump();
+      [400, 900, 1600, 2400].forEach(function (ms) {
+        setTimeout(function () { if (!cancelled) jump(); }, ms);
+      });
+    }
+  }, 100);
+})();
+</script>
 </body></html>
